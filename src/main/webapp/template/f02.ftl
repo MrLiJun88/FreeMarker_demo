@@ -32,6 +32,40 @@
             9:获取指定字符的索引 ?index_of("xx")
             10：去除字符串前后空格：?trim
             11：替换指定字符串  ?replace("xx","xx")
+       空值情况：
+            freemarker提供了两个运算符来避免空值
+            1：! 指定缺失变量的默认值
+            ${value!}:如果value为空，则默认值是空字符串
+            ￥{value!"默认值"} ，如果value是空，则默认值是字符串"默认值"
+
+            2：?? 判断变量是否存在
+            如果变量存在，则返回true,否则返回false
+            ${(value??)?string} 或 ${(value??)?c}
+       序列类型：
+            1:（数组，List,Set）通过 list 指令输出序列
+            <#list 序列名 as 元素名>
+                ${元素名}
+            </#list>
+
+            获取序列的长度     ${序列名?size}
+            获取序列元素的下标   ${元素名?index}
+            获取第一个元素     ${序列名?first}
+            获取最后一个元素   ${序列名?last}
+
+            倒序输出    序列名?reverse
+            升序输出    序列名?sort
+            降序输出    序列名?sort?reverse
+            指定字段名排序   序列名?sort_by("字段名") 注：一般是JavaBean集合，对应的字段名需要有get方法
+
+       hash类型
+            1：通过 key 获取 value
+                <#list hash?keys as key>
+                    ${key} -- ${hash[key]}
+                </list>
+            2:value遍历输出
+                <#list hash?values as value>
+                    ${value}
+                </list>
 -->
 <h5>布尔类型</h5>
 ${flag?c}<br>
@@ -65,9 +99,49 @@ ${msg?cap_first}<br>
 ${msg?lower_case}<br>
 ${msg?upper_case}<br>
 ${msg?length}<br>
-${msg?starts_with("he")?string}<br>
-${msg?ends_with("vv")?string}<br>
+${msg?starts_with("he")?c}<br>
+${msg?ends_with("vv")?c}<br>
 ${msg?index_of("h")}<br>
 ${msg?trim}<br>
-${msg?replace("h","v")}
+${msg?replace("he","haha")}<br>
 <hr>
+<h5>空值情况</h5>
+${str1!}<br>
+${str1!"str1 is null !"}<br>
+${(str1??)?c}<br>
+${str2}<br>
+<hr>
+<h5>sequence(数据，集合)</h5>
+<#list arrays as it>
+  下标 ${it?index} --- ${it}<br>
+</#list>
+获取序列的长度: ${arrays?size}<br>
+获取序列第一个元素: ${arrays?first}<br>
+获取序列最后一个元素: ${arrays?last}<br>
+<hr>
+<h5>List操作</h5>
+<#list list as it>
+    ${it}<br>
+</#list>
+倒序：<br><#list list?reverse as it>
+         &nbsp;&nbsp;&nbsp; ${it}<br>
+     </#list>
+升序：<br><#list list?sort as it>
+        &nbsp;&nbsp;&nbsp; ${it}<br>
+      </#list>
+降序：<br><#list list?sort?reverse as it>
+        &nbsp;&nbsp;&nbsp;${it}<br>
+     </#list>
+<hr>
+<h5>JavaBean集合</h5>
+<#list userList?sort_by("username") as user>
+    ${user.username} -- ${user.age}<br>
+</#list>
+<hr>
+<h5>map类型</h5>
+<#list map?keys as key>
+    ${key} -- ${map[key]}
+</#list><br>
+<#list map?values as value>
+    ${value}
+</#list>
